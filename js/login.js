@@ -30,9 +30,28 @@ function validation(){
 // ------------------------
 
 const form = document.getElementById('myform');
+const email = document.getElementById('inputEmail');
+const password = document.getElementById('inputPassword');
 
 form.addEventListener('submit', (e) => {
       e.preventDefault();
-
       validation();
-});
+      let users = Array(
+        {
+            usuario: email.value,
+            contraseña: password.value
+        }
+      );
+      localStorage.setItem('user',JSON.stringify(users));
+    });
+
+const emailnav = document.getElementById('email');
+
+
+let username = JSON.parse(localStorage.getItem('user'));
+
+if(username != null){
+   emailnav.innerHTML= '<a href="#" id="close">'+username[0].usuario+'</a>';
+}
+
+

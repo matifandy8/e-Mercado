@@ -135,4 +135,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
         showProductsList();
     });
 
+    let filterInput = document.getElementById('myInput');
+    filterInput.addEventListener('keyup',filterNames)
+
+    function filterNames(){
+        let filterValue = filterInput.value.toUpperCase();
+        
+    }
 });
