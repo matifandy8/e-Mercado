@@ -136,19 +136,27 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
     // BUSCADOR POR NOMBRE DE PRODUCTO
 
-
     const searchBar = document.getElementById('myInput');
 
     searchBar.addEventListener('keyup', (e) => {
         const searchString = e.target.value.toLowerCase();
         const filteredProducts = currentProductsArray.filter((product) => {
-            return (
-                product.name.toLowerCase().includes(searchString)
-            );
+            for (i = 0; i < currentProductsArray.length; i++) {
+               let product = currentProductsArray[i];
 
+            if(product.name.toLowerCase().includes(searchString) === true){
+                currentProductsArray[i].style.display = "";
+            }else{
+                currentProductsArray[i].style.display = "none";
+            }
+        }
         });
-       console.log(filteredProducts);
+       console.log(product.name.toLowerCase().includes(searchString));
     });
+
+
+    //   ------------------------------------------------------
+
 
 
 
