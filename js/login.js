@@ -23,7 +23,7 @@ function validation(){
       error_message.innerHTML = text;
       return false;
     }
-    window.location="index.html"
+    window.location="e-mercado.html"
     return true;
 }
 
