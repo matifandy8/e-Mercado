@@ -139,3 +139,28 @@ a.custom-card:hover {
 .checked {
   color: orange;
 }
+
+
+
+
+/* Agregar comentario product-info */
+.pb-cmnt-container {
+  font-family: Lato;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+}
+
+.pb-cmnt-textarea {
+  resize: none;
+  padding: 20px;
+  height: 130px;
+  width: 100%;
+  border: 1px solid #F2F2F2;
+}
+.star-rating {
+  line-height:32px;
+  font-size:1.25em;
+}
+
+.star-rating .fa-star{color: yellow;}

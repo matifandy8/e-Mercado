@@ -70,6 +70,11 @@ document.addEventListener("DOMContentLoaded", function (e) {
                     <p>
                       ${comment.description}
                     </p>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
                   </div>
                 </div>
               </div>

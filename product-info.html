@@ -18,22 +18,22 @@
 <body>
   <nav class="site-header sticky-top py-1 bg-dark">
     <div class="container d-flex flex-column flex-md-row justify-content-between">
-      <a class="py-2 d-none d-md-inline-block" href="index.html">Inicio</a>
+      <a class="py-2 d-none d-md-inline-block" href="e-mercado.html">Inicio</a>
       <a class="py-2 d-none d-md-inline-block" href="categories.html">Categorías</a>
       <a class="py-2 d-none d-md-inline-block" href="products.html">Productos</a>
       <a class="py-2 d-none d-md-inline-block" href="sell.html">Vender</a>
       <a class="py-2 d-none d-md-inline-block" href="cart.html">Mi carrito</a>
-      <a class="py-2 d-none d-md-inline-block" href="login.html">Inicio de Sesion</a>
+      <a class="py-2 d-none d-md-inline-block" href="my-profile.html" id="usernav">Inicio de Sesion</a>
     </div>
   </nav>
-  <div class="container p-5">
+  <div class="container p-4">
     <!-- ----------------------------------- -->
      
     <div class="text-center p-4">
-      <h2>Descripción de la categoría</h2>
-      <p class="lead">Encontrarás aquí toda la información de la categoría seleccionada.</p>
-      <p class="small alert-warning py-3"><strong>Nota: </strong>por simplicidad, cualquiera sea la categoría
-        seleccionada previamente, siempre se visualizará la presente: <strong>Autos</strong>.</p>
+      <h2>Descripción del Auto</h2>
+      <p class="lead">Encontrarás aquí toda la información del auto seleccionado.</p>
+      <p class="small alert-warning py-3"><strong>Nota: </strong>por simplicidad, cualquiera sea el auto
+        seleccionado previamente, siempre se visualizará el presente: <strong>Chevrolet Onix Joy</strong>.</p>
     </div>
     <h3 id="productName"></h3>
     <hr class="my-3">
@@ -67,12 +67,30 @@
     </dl>
 
     <h2>Comentarios</h2>
-    <div class="row">
-      <div class="list-group" id="comment-list-container">
+    <!-- Agregar comentario -->
+    <div class="container pb-cmnt-container">
+      <div class="conatiner">
+          <div class="col-md-6 col-md-offset-3">
+              <div class="panel panel-info">
+                  <div class="panel-body">
+                      <textarea placeholder="Escribe tu comentario aqui!" class="pb-cmnt-textarea"></textarea>
+                      <form class="form-inline">
+                      
+                        <button class="btn btn-primary pull-right" type="button">Compartir</button>
+                      </form>
+                      
+                  </div>
+              </div>
+          </div>
       </div>
   </div>
 
-  <!-- --------------------------------- -->
+
+    <div class="container">
+      <div class="list-group" id="comment-list-container">
+      </div>
+      
+  <!-- Fin comentarios  ------------------- -->
     </div>
   </div>
   <footer class="text-muted">
@@ -96,6 +114,7 @@
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/init.js"></script>
   <script src="js/product-info.js"></script>
+  <script src="js/login.js"></script>
 </body>
 
 </html>
