@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", function(e){
       usernav.innerHTML = '<a href="login.html" id="close" class="subnavbtn nav link active">Iniciar sesion</a>';
   }
   
+  close.addEventListener('click',function(){
+    localStorage.clear('user');
+    location.href='index.html';
+   });
 });
 
 function validation(){
