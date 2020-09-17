@@ -23,6 +23,25 @@ function showImagesGallery(array) {
   }
 }
 
+function showRelatedImages(array) {
+  htmlContentToAppend = "";
+
+  for (i = 0; i < product.relatedProducts.length; i++) {
+
+      let pos = product.relatedProducts[i];
+      let related = array[pos];
+
+      htmlContentToAppend += `
+      <div class="col-lg-3 col-md-4 col-6">
+      <div class="d-block mb-4 h-100">
+   <img class="img-fluid img-thumbnail" src="` + related.imgSrc + `" alt="">
+      </div>
+      </div>  `
+
+      document.getElementById("relatedImages").innerHTML = htmlContentToAppend;
+  }
+}
+
 //Función que se ejecuta una vez que se haya lanzado el evento de
 //que el documento se encuentra cargado, es decir, se encuentran todos los
 //elementos HTML presentes.
@@ -47,6 +66,18 @@ document.addEventListener("DOMContentLoaded", function (e) {
 
       //Muestro las imagenes en forma de galería
       showImagesGallery(product.images);
+   
+   
+      getJSONData(PRODUCTS_URL).then(function (resultProd) {
+        if (resultProd.status === "ok") {
+
+            related = resultProd.data;
+            showRelatedImages(related);
+        }
+    });
+
+   
+   
     }
   });
 

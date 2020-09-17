@@ -5,6 +5,7 @@ var currentProductsArray = [];
 var currentSortCriteria = undefined;
 var minCount = undefined;
 var maxCount = undefined;
+var textoBuscar = undefined;
 
 function sortProducts(criteria, array) {
     let result = [];
@@ -134,11 +135,13 @@ document.addEventListener("DOMContentLoaded", function (e) {
         showProductsList();
     });
 
-  
+    //   -------------  Search Form   -----------------------
+    document.getElementById("searchForm").addEventListener("keyup", function () {
 
+        textoBuscar = document.getElementById("searchForm").value ;       
+        showProductsList();
 
-    //   ------------------------------------------------------
-
+    });
 
 
 
