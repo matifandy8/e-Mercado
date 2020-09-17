@@ -164,3 +164,31 @@ a.custom-card:hover {
 }
 
 .star-rating .fa-star{color: yellow;}
+
+
+  .py-2{
+    border-radius: 15px;
+  padding: 8px;
+  text-decoration: none;
+  }
+
+.py-2:hover{
+  list-style: none;
+  text-decoration: none;
+  border-radius: 15px;
+  padding: 8px;
+ background-color: rgb(226, 105, 135);
+}
+
+#usernav{
+  background-color:  rgb(226, 105, 135);;
+}
+.dropdown-menu.show{
+  background-color:  rgb(226, 105, 135);;
+}
+.site-header .dropdown-menu a{
+  color: #fff;
+}
+.site-header .dropdown-menu a:hover{
+ background-color: #333;
+}

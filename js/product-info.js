@@ -1,26 +1,26 @@
 var product = {};
+var num_stars = 1;
 
+//Mostrar imágenes del producto en un carrusel
 function showImagesGallery(array) {
   let htmlContentToAppend = "";
 
   for (let i = 0; i < array.length; i++) {
-    let imageSrc = array[i];
-
-    htmlContentToAppend +=
-      `
-        <div class="col-lg-3 col-md-4 col-6">
-            <div class="d-block mb-4 h-100">
-                <img class="img-fluid img-thumbnail" src="` +
-      imageSrc +
-      `" alt="">
-            </div>
-        </div>
-        `;
-
-    document.getElementById(
-      "productImagesGallery"
-    ).innerHTML = htmlContentToAppend;
+      if (i == 0) {                             
+          htmlContentToAppend += ` 
+          <div class="carousel-item active">
+              <img class="d-block w-100" src="` + array[i] + `" > 
+          </div> 
+          `
+      } else {
+          htmlContentToAppend += `
+          <div class="carousel-item">
+              <img class="d-block w-100" src="` + array[i] + `">
+          </div>
+          `
+      }
   }
+  document.getElementById("Caruzel").innerHTML = htmlContentToAppend;
 }
 
 function showRelatedImages(array) {
@@ -101,23 +101,100 @@ document.addEventListener("DOMContentLoaded", function (e) {
                     <p>
                       ${comment.description}
                     </p>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
+                    <p><b>Puntuacion:</b> `+comment.score+` <i class="fa fa-star"></i></p>
+
                   </div>
                 </div>
               </div>
             </div>
           </article>
         `;
+        stars_score();
 
         document.getElementById(
-          "comment-list-container"
+          "users"
         ).innerHTML = htmlContentToAppend;
       }
     }
   });
 });
 
+
+
+// Mostar el nombre del usuario actual en la sección de comentar
+var userComment = JSON.parse(localStorage.getItem('user'));
+  document.getElementById("userCom").innerHTML = userComment[0].email;
+
+function stars_score() {
+stars ="";
+for(let s=5; s>0; s--) {
+  if(s > num_stars) {
+    stars +=`<span class="fa fa-star float-right"></span>`
+  } else {
+    stars +=`<span class="fa fa-star checked float-right"></span>`
+  }
+  document.getElementById("stars_rating").innerHTML=stars;
+}
+}
+
+
+
+//Agregar estrellas a la calificación
+function add_star() {
+  if(num_stars < 5) {
+    num_stars++;
+  }
+}
+
+//Restar estrellas a la calificación
+function take_star() {
+  if(num_stars > 1) {
+    num_stars--;
+  }
+}
+
+//Mostrar las estrellas en el formulario, para calificar
+function show_rating(num) {
+  let rating = "";
+  
+  for(let x=5; x>0; x--) {
+    
+    if(x > num) {
+      rating +=`<span class="fa fa-star float-right"></span>`
+    } else {
+      rating +=`<span class="fa fa-star checked float-right"></span>`
+    }
+    document.getElementById("stars_rating").innerHTML= rating;
+
+  }
+}
+
+
+
+//Añadir comentario a la pantalla actual
+function addComment(event) {
+  event.preventDefault();
+  let opinion = document.getElementById("opinion").value;
+  
+
+  let comment = "";
+  var today = new Date();
+  var todayDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
+  comment = `
+          <h4><b>Su comentario:</b></h4>
+          <p><b>Usuario: `+userComment[0].email+`</b></p>
+          <p><b>Comentario:</b> `+opinion+`</p>`
+          for(let y = 5; y > 0; y--) {
+    
+            if(y > num_stars) {
+              comment += `<span class="fa fa-star float-right"></span>`
+            } else {
+              comment += `<span class="fa fa-star checked float-right"></span>`
+            }}
+          comment+=
+          `
+          <p><b>Fecha:</b> `+todayDate+`</p>
+          <hr>
+        `
+      document.getElementById("users").innerHTML += comment;
+}

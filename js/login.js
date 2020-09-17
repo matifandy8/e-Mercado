@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", function(e){
   let username = JSON.parse(localStorage.getItem('user'));
   
   if(username != null){
-      usernav.innerHTML = '<a href="#" id="close" class="subnavbtn nav link active">'+username[0].email+'</a>';
+      usernav.innerHTML = '<a href="#" id="close" class="">'+username[0].email+'</a>';
   }else{
-      usernav.innerHTML = '<a href="login.html" id="close" class="subnavbtn nav link active">Iniciar sesion</a>';
+      usernav.innerHTML = '<a href="login.html" id="close" class="">Iniciar sesion</a>';
   }
   
   close.addEventListener('click',function(){
