@@ -1,3 +1,10 @@
+let datos = [];
+let article = [];
+
+// -------------------------------------------------
+
+//Función que se utiliza para actualizar los costos de publicación
+
 function showProducts(articles) {
   let contenidoHTML = "";
 
@@ -37,12 +44,15 @@ function showProducts(articles) {
                           </div>
                       </div>
                   </div> 
+                  
               </div>    
           </div>  
           `;
     costoArticulo = article.unitCost;
     document.getElementById("cart-container").innerHTML = contenidoHTML;
   }
+  updateSubtotal();
+  updateTotalCosts();
 }
 
 //Función que se ejecuta una vez que se haya lanzado el evento de
