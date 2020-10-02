@@ -1,5 +1,7 @@
 let datos = [];
 let article = [];
+let subtotal = 0;
+let costoArticulo = 0;
 
 // -------------------------------------------------
 
@@ -52,7 +54,6 @@ function showProducts(articles) {
     document.getElementById("cart-container").innerHTML = contenidoHTML;
   }
   updateSubtotal();
-  updateTotalCosts();
 }
 
 //Función que se ejecuta una vez que se haya lanzado el evento de
