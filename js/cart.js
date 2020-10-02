@@ -1,72 +1,92 @@
-let datos = [];
-let article = [];
-let subtotal = 0;
-let costoArticulo = 0;
+const UYU_TO_USD = 40;
 
-// -------------------------------------------------
+const s = document.querySelector.bind(document);
+const sAll = document.querySelectorAll.bind(document);
 
-//Función que se utiliza para actualizar los costos de publicación
+const cartProductList = s("#cart-products"),
+  totalElement = s("#cart-total"),
+  totalProductCountElement = s("#total-product-count");
 
-function showProducts(articles) {
-  let contenidoHTML = "";
+let products;
+let totalProductCount = 0;
+let total;
 
-  for (let i = 0; i < articles.length; i++) {
-    let article = articles[i];
-    contenidoHTML +=
-      `
-          <div class="list-group-item">
-              <div class="row">
-                  <div class="col-2">
-                      <img src="` +
-      article.src +
-      `" alt="` +
-      `" class="img-thumbnail">
-                  </div>
-                  <div class="col">
-                      <h5><strong>Nombre</strong></h5>
-                      <p class="lead"> ` +
-      article.name +
-      ` </p>
-                  </div>
-                  <div class="col">
-                      <h5><strong>Precio por unidad</strong></h5>
-                      <p class="lead" id="unitCost">  ` +
-      article.unitCost +
-      ` ` +
-      article.currency +
-      `</p>
-                  </div> 
-                  <div class="col">
-                      <h5><strong>N° de artículos</strong></h5>
-                      <div class="row">
-                          <div class="col-6">       
-                              <input class="form-control" type="number" id="prodCount" placeholder=" ` +
-      article.count +
-      ` " value= "2" min= "0"> 
-                          </div>
-                      </div>
-                  </div> 
-                  
-              </div>    
-          </div>  
-          `;
-    costoArticulo = article.unitCost;
-    document.getElementById("cart-container").innerHTML = contenidoHTML;
-  }
-  updateSubtotal();
+getJSONData(CART_INFO_URL).then(({ data }) => {
+  products = data.articles;
+  updateTotal();
+  showCartProducts();
+});
+
+function updateTotal() {
+  total = products.reduce((accum, product) => {
+    let total = accum + product.count * product.unitCost;
+
+    if (product.currency === "UYU") {
+      total /= UYU_TO_USD;
+    }
+
+    return total;
+  }, 0);
+
+  totalElement.innerHTML = `${products[0].currency} ${total}`;
 }
 
-//Función que se ejecuta una vez que se haya lanzado el evento de
-//que el documento se encuentra cargado, es decir, se encuentran todos los
-//elementos HTML presentes.
+function updateSubtotal(idx) {
+  let subtotal;
 
-document.addEventListener("DOMContentLoaded", function (e) {
-  getJSONData(CART_INFO_URL).then(function (resultObj) {
-    if (resultObj.status === "ok") {
-      datos = resultObj.data;
+  subtotal = products[idx].count * products[idx].unitCost;
 
-      //Muestra el producto en el carrito
-      showProducts(datos.articles);
-    }
-  });
-});
+  if (products[idx].currency === "UYU") {
+    subtotal /= UYU_TO_USD;
+  }
+
+  document.getElementById(`product-subtotal-${idx}`).innerHTML =
+    "USD " + subtotal;
+}
+
+function showCartProducts() {
+  cartProductList.innerHTML = products.reduce((currentHtml, product, idx) => {
+    // totalProductCount += product.count;
+    totalProductCount++;
+
+    return (
+      currentHtml +
+      `
+              <div class="cart-product" min="0">
+                <div id="product-left-info">
+                  <li class="list-group-item">
+                    <img src="${product.src}" />
+                    ${product.name}
+                    <span class="badge badge-primary" id="product-count-badge-${idx}">${product.count}</span>
+                  </li>
+                  <p class="product-unitprice">Precio por unidad: ${product.currency} ${product.unitCost}</p>
+                </div>
+                <div id="product-right-info">
+                Subtotal: <span id="product-subtotal-${idx}">0</span>
+                <br/>
+                Cantidad: <input type="number" class="product-count-input" data-product-idx="${idx}" value="${product.count}" min="0"/>
+                </div>
+                </div>
+            `
+    );
+  }, "");
+
+  totalProductCountElement.innerHTML = totalProductCount;
+
+  for (let productCountInput of sAll(".product-count-input")) {
+    const idx = productCountInput.dataset.productIdx;
+
+    updateSubtotal(idx);
+
+    productCountInput.addEventListener("input", ({ target }) => {
+      products[idx].count = +target.value;
+
+      document.getElementById(
+        `product-count-badge-${idx}`
+      ).innerHTML = +target.value;
+
+      updateSubtotal(idx);
+      updateTotal();
+    });
+  }
+}
