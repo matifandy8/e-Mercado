@@ -31,6 +31,7 @@ function updateTotal() {
   totalElement.innerHTML = `${products[0].currency} ${total}`;
 }
 
+// actualizar subtotal
 function updateSubtotal(idx) {
   let subtotal;
 
@@ -44,6 +45,7 @@ function updateSubtotal(idx) {
     "USD " + subtotal;
 }
 
+// mostrar productos del carrito
 function showCartProducts() {
   cartProductList.innerHTML = products.reduce((currentHtml, product, idx) => {
     // totalProductCount += product.count;
