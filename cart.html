@@ -102,25 +102,41 @@
       <tbody id="cartProduct">
       </tbody>
     </table>
-    <p class="mr-5 text-right">Subtotal: <span id="subtotal"></span></p>
-    <p class="mr-5 text-right">Seleccione su tipo de envío:</p>
+    <p class="mr-5">Subtotal: <span id="subtotal"></span></p>
+    <p class="mr-5">Costo de Envío: <span id="tipoDeEnvio"></span></p>
+    <p class="mr-5">Total: <span id="total"></span></p>
     <form id="envio">
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-secondary text-right">
-        <input type="radio" name="options" id="option1" value="gold" checked> Gold
-      </label>
-      <label class="btn btn-secondary text-right">
-        <input type="radio" name="options" id="option2" value="premium"> Premium
-      </label>
-      <label class="btn btn-secondary text-right">
-        <input type="radio" name="options" id="option3" value="estandar"> Estandar
-      </label>
-    </div>
-    </form>
-    <p class="mr-5 text-right">Costo de Envío: <span id="tipoDeEnvio"></span></p>
-    <p class="mr-5 text-right">Total: <span id="total"></span></p>
-  </div>
+      <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Seleccionar forma de Envio</a>
 
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+              <h4 class="" id="myModalLabel">Forma de Envio</h4>
+            </div>
+            <div class="modal-body">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary text-right">
+              <input type="radio" name="options" id="option1" value="gold" checked> Gold
+            </label>
+            <label class="btn btn-secondary text-right">
+              <input type="radio" name="options" id="option2" value="premium"> Premium
+            </label>
+            <label class="btn btn-secondary text-right">
+              <input type="radio" name="options" id="option3" value="estandar"> Estandar
+            </label>
+          </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn btn-primary">Seleccionar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    
+  </div>
   <div id="spinner-wrapper">
     <div class="lds-ring">
       <div></div>
@@ -129,6 +145,7 @@
       <div></div>
     </div>
   </div>
+ 
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/dropzone.js"></script>
