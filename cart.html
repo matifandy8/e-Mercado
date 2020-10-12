@@ -86,28 +86,49 @@
         </div>
       </div>
     </nav>
-    <main>
-      <div class="text-center p-4">
-        <h2>Carrito</h2>
-        <p class="lead">Tus productos pendientes de compra.</p>
-      </div>
+    <h3>Carrito</h3>
+  <br>
 
-      <div id="cart">
-        <p>Cantidad de productos: <span id="total-product-count">0</span></p>
-        <ul id="cart-products"></ul>
-        <b>
-          <p>Total: <span id="cart-total">0</span></p>
-        </b>
-      </div>
-    </main>
-    <div id="spinner-wrapper">
-      <div class="lds-ring">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+  <div class="cart">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Producto</th>
+          <th scope="col">Precio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody id="cartProduct">
+      </tbody>
+    </table>
+    <p class="mr-5 text-right">Subtotal: <span id="subtotal"></span></p>
+    <p class="mr-5 text-right">Seleccione su tipo de envío:</p>
+    <form id="envio">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-secondary text-right">
+        <input type="radio" name="options" id="option1" value="gold" checked> Gold
+      </label>
+      <label class="btn btn-secondary text-right">
+        <input type="radio" name="options" id="option2" value="premium"> Premium
+      </label>
+      <label class="btn btn-secondary text-right">
+        <input type="radio" name="options" id="option3" value="estandar"> Estandar
+      </label>
     </div>
+    </form>
+    <p class="mr-5 text-right">Costo de Envío: <span id="tipoDeEnvio"></span></p>
+    <p class="mr-5 text-right">Total: <span id="total"></span></p>
+  </div>
+
+  <div id="spinner-wrapper">
+    <div class="lds-ring">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/dropzone.js"></script>

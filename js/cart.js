@@ -1,94 +1,109 @@
-const UYU_TO_USD = 40;
+var cantidadProductos = [];
+var totalPorProducto = [];
+var costoUnidad = [];
+var costoUnidadEnPesos = [];
+var subtotal = [];
+var subtotalFinal = [];
 
-const s = document.querySelector.bind(document);
-const sAll = document.querySelectorAll.bind(document);
+function showArticles(array) {
+  let htmlContent = "";
+  for (let i = 0; i < array.length; i++) {
+    let article = array[i];
 
-const cartProductList = s("#cart-products"),
-  totalElement = s("#cart-total"),
-  totalProductCountElement = s("#total-product-count");
+    htmlContent +=
+      `
+    <tr>
+      <th scope="col"> <img class="mr-2 img-thumbnail" width="70" height="70" src="` +
+      article.src +
+      `" alt="">` +
+      article.name +
+      `</th>
+      <th scope="col" id="price">` +
+      article.currency +
+      article.unitCost +
+      `</th>
+      <th scope="col">
+        <input type="number" class="quantity" value="` +
+      article.count +
+      `"></input>
+      </th>
+      <th scope="col"> <span class="productTotalByUnit">` +
+      article.unitCost * article.count +
+      `<span></th>
+    </tr>
+    `;
+  }
+  document.getElementById("cartProduct").innerHTML = htmlContent;
+}
 
-let products;
-let totalProductCount = 0;
-let total;
+function calcularTotales(array) {
+  let cantidadProd = document.getElementsByClassName("quantity");
+  for (let index = 0; index < cantidadProd.length; index++) {
+    const element = cantidadProd[index];
+    let costoUnidad = array[index].unitCost;
 
-getJSONData(CART_INFO_URL).then(({ data }) => {
-  products = data.articles;
-  updateTotal();
-  showCartProducts();
-});
+    element.onchange = function (e) {
+      cantidadProductos = e.target.value;
+      var totalPorProducto = cantidadProductos * costoUnidad;
+      var art = document.getElementsByClassName("productTotalByUnit");
+      art[index].innerText = totalPorProducto;
 
-function updateTotal() {
-  total = products.reduce((accum, product) => {
-    let total = accum + product.count * product.unitCost;
+      if (array[index].currency == "USD") {
+        var costoUnidadEnPesos = costoUnidad * 40;
+      } else costoUnidadEnPesos = costoUnidad;
 
-    if (product.currency === "UYU") {
-      total /= UYU_TO_USD;
+      var subtotal = costoUnidadEnPesos * cantidadProductos;
+      subtotalFinal[index] = +subtotal;
+
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      console.log(subtotalFinal.reduce(reducer));
+      let numero = subtotalFinal.reduce(reducer);
+      document.getElementById("subtotal").innerHTML = numero;
+    };
+  }
+}
+
+function envio() {
+  let botones = document.getElementById("envio");
+  botones.onchange = function (e) {
+    htmlContent = "";
+    console.log(e.target.value);
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    console.log(subtotalFinal.reduce(reducer));
+    let numero = subtotalFinal.reduce(reducer);
+
+    if (e.target.value === "gold") {
+      envioGold = numero * 0.15;
+      htmlContent = envioGold;
+    } else {
+      if (e.target.value === "premium") {
+        envioPremium = numero * 0.07;
+        htmlContent = envioPremium;
+      } else {
+        if (e.target.value === "estandar") {
+          envioEstandar = numero * 0.05;
+          htmlContent = envioEstandar;
+        }
+      }
     }
 
-    return total;
-  }, 0);
+    var totalFinal = numero + Number(htmlContent);
+    console.log(totalFinal);
 
-  totalElement.innerHTML = `${products[0].currency} ${total}`;
+    document.getElementById("tipoDeEnvio").innerHTML = htmlContent;
+    document.getElementById("total").innerHTML = totalFinal;
+  };
 }
-
-// actualizar subtotal
-function updateSubtotal(idx) {
-  let subtotal;
-
-  subtotal = products[idx].count * products[idx].unitCost;
-
-  if (products[idx].currency === "UYU") {
-    subtotal /= UYU_TO_USD;
-  }
-
-  document.getElementById(`product-subtotal-${idx}`).innerHTML =
-    "USD " + subtotal;
-}
-
-// mostrar productos del carrito
-function showCartProducts() {
-  cartProductList.innerHTML = products.reduce((currentHtml, product, idx) => {
-    // totalProductCount += product.count;
-    totalProductCount++;
-
-    return (
-      currentHtml +
-      `
-              <div class="cart-product" min="0">
-                <div id="product-left-info">
-                  <li class="list-group-item">
-                    <img src="${product.src}" />
-                    ${product.name}
-                    <span class="badge badge-primary" id="product-count-badge-${idx}">${product.count}</span>
-                  </li>
-                  <p class="product-unitprice">Precio por unidad: ${product.currency} ${product.unitCost}</p>
-                </div>
-                <div id="product-right-info">
-                Subtotal: <span id="product-subtotal-${idx}">0</span>
-                <br/>
-                Cantidad: <input type="number" class="product-count-input" data-product-idx="${idx}" value="${product.count}" min="0"/>
-                </div>
-                </div>
-            `
-    );
-  }, "");
-
-  totalProductCountElement.innerHTML = totalProductCount;
-
-  for (let productCountInput of sAll(".product-count-input")) {
-    const idx = productCountInput.dataset.productIdx;
-
-    updateSubtotal(idx);
-
-    productCountInput.addEventListener("input", ({ target }) => {
-      products[idx].count = +target.value;
-
-      document.getElementById(
-        `product-count-badge-${idx}`
-      ).innerHTML = +target.value;
-
-      updateSubtotal(idx);
-      updateTotal();
-    });
-  }
-}
+//Función que se ejecuta una vez que se haya lanzado el evento de
+//que el documento se encuentra cargado, es decir, se encuentran todos los
+//elementos HTML presentes.
+document.addEventListener("DOMContentLoaded", function (e) {
+  getJSONData(CART_INFO_URL).then(function (resultObj) {
+    if (resultObj.status === "ok") {
+      product = resultObj.data;
+      showArticles(product.articles);
+      calcularTotales(product.articles);
+      envio();
+    }
+  });
+});
