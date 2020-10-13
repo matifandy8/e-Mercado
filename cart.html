@@ -86,66 +86,162 @@
         </div>
       </div>
     </nav>
-    <h3>Carrito</h3>
-  <br>
-
-  <div class="cart">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Producto</th>
-          <th scope="col">Precio</th>
-          <th scope="col">Cantidad</th>
-          <th scope="col">Total</th>
-        </tr>
-      </thead>
-      <tbody id="cartProduct">
-      </tbody>
-    </table>
-    <p class="mr-5">Subtotal: <span id="subtotal"></span></p>
-    <p class="mr-5">Costo de Envío: <span id="tipoDeEnvio"></span></p>
-    <p class="mr-5">Total: <span id="total"></span></p>
-    <form id="envio">
-      <a href="#myModal" class="btn btn-lg btn-primary" data-toggle="modal">Seleccionar forma de Envio</a>
-
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-              <h4 class="" id="myModalLabel">Forma de Envio</h4>
-            </div>
-            <div class="modal-body">
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-secondary text-right">
-              <input type="radio" name="options" id="option1" value="gold" checked> Gold
-            </label>
-            <label class="btn btn-secondary text-right">
-              <input type="radio" name="options" id="option2" value="premium"> Premium
-            </label>
-            <label class="btn btn-secondary text-right">
-              <input type="radio" name="options" id="option3" value="estandar"> Estandar
-            </label>
+    
+    <main role="main" class="pb-5">
+      <div class="text-center p-4">
+          <h2>Mi Carrito</h2>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-9">
+            <div class="list-group" id="cart-list-container"></div>
+            <div class="col-6" id="cart-container"></div>
           </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-              <button type="button" class="btn btn-primary">Seleccionar</button>
+          <div class="col-3">
+            <div class="row">
+              <div id="cart-dataenvio-container"></div>
+            </div>
+            <div class="row">
+              <div id="cart-datapago-container"></div>
             </div>
           </div>
         </div>
       </div>
-    </form>
-    
-  </div>
-  <div id="spinner-wrapper">
-    <div class="lds-ring">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div class="modal fade" tabindex="-1" role="dialog" id="modalTiposEnvio">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tipos de envío</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                  <div class="row">
+                      <h5 class="text-warning">Premium (15%)</h5>
+                      <p class="muted text-justify">Al contratar envío Premium, te aseguras recibir tus productos, ¡en los siguientes 4 días!</p>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <h5 class="text-primary">Express (7%)</h5>
+                      <p class="muted text-justify">Adquiriendo la modalidad de envío Express, recibirás tu pedido entre 5 y 8 días luego de realizar la compra.</p>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <h5 class="text-secondary">Standard (5%)</h5>
+                      <p class="muted text-justify">Con el envío Standar, recibirás tu compra entre 12 y 15 días luego de efectuada..</p>
+                  </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="modal fade" tabindex="-1" role="dialog" id="modalTarjeta">
+        <div style="max-width: 800px;" class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Nueva tarjeta</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form onsubmit="return agregarTarjeta()" id="formNuevaTarjeta">
+                  <div class="row">
+                    <div class="col-50">
+                      <h3>Datos</h3>
+                      <div class="row">
+                        <div class="col-50">
+                          <p><i class="fa fa-user"></i> Titular
+                            <input type="text" id="fname" name="firstname" required placeholder="Juan Perez"></p>
+                        </div>
+                        <div class="col-50">
+                          <p><label for="temail"><i class="fa fa-envelope"></i> Email</label>
+                            <input type="text" id="temail" name="temail" placeholder="jperez@example.com"></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-50">
+                          <p><label for="cardnumber"><i class="far fa-credit-card"></i> Número de tarjeta</label>
+                            <input type="text" id="cardnumber" name="cardnumber" required placeholder="1111-2222-3333-4444"></p>
+                        </div>
+                        <div class="col-50">
+                          <p><label for="cvv">CVV</label>
+                            <input type="password" id="cvv" required name="cvv" placeholder="111"></p>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-50">
+                          <p><label for="mesExp">Expiración: Mes</label>
+                            <select required name="mesExp" id="mesExp">
+                              <option disabled selected value="">--</option>
+                              <option value="1">01</option>
+                              <option value="2">02</option>
+                              <option value="3">03</option>
+                              <option value="4">04</option>
+                              <option value="5">05</option>
+                              <option value="6">06</option>
+                              <option value="7">07</option>
+                              <option value="8">08</option>
+                              <option value="9">09</option>
+                              <option value="10">10</option>
+                              <option value="11">11</option>
+                              <option value="12">12</option>
+                            </select></p>
+                        </div>
+                        <div class="col-50">
+                          <p><label for="anioExp">Año</label>
+                            <select required name="anioExp" id="anioExp">
+                              <option disabled selected value="">--</option>
+                              <option value="2020">2020</option>
+                              <option value="2021">2021</option>
+                              <option value="2022">2022</option>
+                              <option value="2023">2023</option>
+                              <option value="2024">2024</option>
+                              <option value="2025">2025</option>
+                              <option value="2026">2026</option>
+                            </select></p>
+                        </div>
+                      </div>        
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Agregar tarjeta</button>
+                </form>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </main>
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Volver arriba</a>
+        </p>
+        <p>Este sitio forma parte de Desarrollo Web - JAP - 2020</p>
+        <p>Clickea <a target="_blank" href="Letra.pdf">aquí</a> para descargar la letra del obligatorio.</p>
+      </div>
+    </footer>
+    <div id="spinner-wrapper">
+      <div class="lds-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
-  </div>
- 
+
+
+
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/dropzone.js"></script>
