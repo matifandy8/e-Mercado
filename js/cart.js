@@ -8,7 +8,7 @@ function showCartElementsList() {
 
     htmlContentToAppend +=
       `
-        <div class="producto">
+        <div class="producto" id="producto">
             <div class="list-group-item list-group-item-action">
                 <div class="row">
                     <div class="col-lg-4">
@@ -274,12 +274,6 @@ function agregarTarjeta() {
   // limpiar formulario
   let form = document.getElementById("formNuevaTarjeta");
   form.reset();
-
-  // seteo email
-  var elUser = document.getElementById("temail");
-  elUser.value = window.localStorage.getItem("logueado");
-
-  return false;
 }
 
 function chequearDatosEnvio() {
@@ -336,15 +330,13 @@ function comprarValidacion() {
   return true;
 }
 
-// Borra producto
-// ---------------------------
-const btnquitar = document.getElementById("btnquitar");
-btnquitar.addEventListener("click", deleteprod);
+function quitarprod() {
+  let prod = document.getElementById("producto0");
+  let prod1 = document.getElementById("producto1");
 
-function deleteprod(e) {
-  console.log(e.target);
+  prod1.remove();
+  prod.remove();
 }
-// --------------------
 
 //Función que se ejecuta una vez que se haya lanzado el evento de
 //que el documento se encuentra cargado, es decir, se encuentran todos los
@@ -373,7 +365,23 @@ document.addEventListener("DOMContentLoaded", function (e) {
         enableCardOrNot();
       });
 
-    var elUser = document.getElementById("temail");
-    elUser.value = window.localStorage.getItem("logueado");
+    // Borra producto
+    // ---------------------------
+
+    // document
+    // .getElementById("btnquitar0")
+    // .addEventListener("click", function (event) {
+    // console.log(event.target.id);
+
+    // quitarprod();
+    // });
+
+    document
+      .getElementById("btnquitar")
+      .addEventListener("click", function (event) {
+        console.log(event.target.parentNode.parentNode.parentNode);
+
+        // quitarprod();
+      });
   });
 });
