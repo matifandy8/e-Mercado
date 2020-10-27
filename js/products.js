@@ -28,12 +28,13 @@ function showProductsList() {
     ) {
       htmlContentToAppend +=
         `
+        <div class="col-6">
         <a href="product-info.html?` +
         product.name +
         `" class="list-group-item list-group-item-action">
         <div class="list-group-item list-group-item-action">
             <div class="row">
-                <div class="col-3">
+                <div class="col-6">
                     <img src="` +
         product.imgSrc +
         `" alt="` +
@@ -61,6 +62,7 @@ function showProductsList() {
             </div>
         </div>
         </a>
+        </div>
         `;
     }
   }
