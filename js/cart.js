@@ -1,387 +1,174 @@
-var currentCart = {};
-var currentCartElements = [];
+var porcentajeShipping = 0.15;
+var datosCart = [];
 
-function showCartElementsList() {
-  let htmlContentToAppend = "";
-  for (let i = 0; i < currentCartElements.length; i++) {
-    let element = currentCartElements[i];
+function mostrarArticulos(arts) {
+  let htmlContenido = "";
 
-    htmlContentToAppend +=
+  for (var i = 0; i < arts.length; i++) {
+    let costoUnitario = arts[i].unitCost;
+    let monedaProducto = arts[i].currency;
+    var tipoCambio = 1;
+    if (monedaProducto == "USD") {
+      tipoCambio = 40;
+    }
+
+    var valorSubtotal = tipoCambio * costoUnitario * arts[i].count;
+    costoTipoMoneda = monedaProducto + " " + costoUnitario;
+    htmlContenido +=
       `
-        <div class="producto" id="producto">
-            <div class="list-group-item list-group-item-action">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <img src="` +
-      element.src +
-      `" alt="` +
-      element.name +
-      `" class="img-thumbnail">
-                    </div>
-                    <div class="col">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h4 class="mb-1 prodname">` +
-      element.name +
-      `</h4>
-                            <div>
-                            <p class="mb-1">Precio unitario:  <span class="moneda">` +
-      element.currency +
-      `</span> <span class="precio">` +
-      element.unitCost +
-      `</span></p>
-                            <!-- <p class="mb-1">Unidades:  ` +
-      element.count +
-      `</p> -->
-                            </div>
-                        </div>
-                        <p>Cantidad: <input class="cantidad" type="number" min="0" value=` +
-      element.count +
-      `></p>
-                        <p>Subtotal: <span class="moneda">` +
-      element.currency +
-      `</span> <span class="subtotalProd"></span> <span class="uyus"></span></p>
-      <button type="button" class="m-1 btn btn-danger" id="btnquitar">Quitar del Carrito</button>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        `;
+    <tr id="fila` +
+      i +
+      `">
+      <td><img src="` +
+      arts[i].src +
+      `" class="img-thumbnail" width="80%"></td>
+      <td>` +
+      arts[i].name +
+      `</td>
+      <td id="monedaCosto` +
+      i +
+      `">` +
+      costoTipoMoneda +
+      `</td>
+      <td><input onchange="actualizarSubtotal(` +
+      i +
+      `)" id="inputCantArticulos` +
+      i +
+      `" class="inputClase quantity" min="1" name="quantity"
+      value="` +
+      arts[i].count +
+      `" type="number"></td>
+      <td><span id="subtotalProd` +
+      i +
+      `" class="subtotalProdClase">` +
+      "UYU " +
+      valorSubtotal +
+      `</span></td>
+    </tr>
+    `;
   }
-  document.getElementById(
-    "cart-list-container"
-  ).innerHTML = htmlContentToAppend;
+  document.getElementById("articulosCarrito").innerHTML = htmlContenido;
 }
 
-function showCartResume() {
-  let htmlContentToAppend = "";
-
-  htmlContentToAppend = `
-    <div>
-        <div class="list-group-item list-group-item-action">
-            <h4 class="mb-1">Resumen</h4><div>
-            <table class="table table-borderless table-sm">
-                <tbody>
-                    <tr>
-                        <th scope="row">Unidades:</th>
-                        <td><span id="totalUnidades"></span> unidades</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Subtotal:</th>
-                        <td>UYU <span id="subtotal"></span></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Costo envío:</th>
-                        <td>UYU <span id="costoEnvio"></span></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Total:</th>
-                        <td>UYU <span id="total"></span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <form onsubmit="return comprarValidacion()">
-                <button type="submit" class="btn btn-dark">Comprar</button>
-            </form>
-        </div>
-    </div>
-    `;
-  document.getElementById("cart-container").innerHTML = htmlContentToAppend;
-}
-
-function showDataEnvio() {
-  let htmlContentToAppend = "";
-
-  htmlContentToAppend = `
-    <div>
-        <div class="list-group-item list-group-item-action">
-            <div class="row">
-                <div class="row-lg-6">
-                    <h4 class="mb-1">Envío</h4><div>
-                    <input id="calle" type="text" class="form-control" placeholder="Calle" value="">
-                    <div class="row">
-                        <div class="col">
-                            <input id="numeropuerta" type="number" class="form-control" placeholder="Nº" value="">
-                        </div>
-                        <div class="col">
-                            <input id="esquina" type="text" class="form-control" placeholder="Esquina" value="">
-                        </div>
-                    </div>
-                    <input id="pais" type="text" class="form-control" placeholder="País" value="">
-                    <select class="custom-select d-block w-100" id="metodoEnvio">
-                        <option disabled selected value="0">Tipo de envío</option>
-                        <option value="15">Premium</option>
-                        <option value="7">Express</option>
-                        <option value="5">Standard</option>
-                    </select>
-                    <button type="button" class="m-1 btn btn-outline-danger" data-toggle="modal" data-target="#modalTiposEnvio">Tipos de Envío</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
-  document.getElementById(
-    "cart-dataenvio-container"
-  ).innerHTML = htmlContentToAppend;
-}
-
-function showDataPago() {
-  let htmlContentToAppend = "";
-
-  htmlContentToAppend = `
-    <div>
-        <div class="list-group-item list-group-item-action">
-            <div class="row">
-                <div class="row-lg-6">
-                    <h4 class="mb-1">Pago</h4><div>
-                    <div class="d-block my-3">
-                        <div class="custom-control custom-radio">
-                            <input id="tarjeta" name="publicationType" type="radio" class="custom-control-input" checked="" required="">
-                            <label class="custom-control-label" for="tarjeta">Tarjeta de crédito</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input id="transferencia" name="publicationType" type="radio" class="custom-control-input" required="">
-                            <label class="custom-control-label" for="transferencia">Transferencia bancaria</label>
-                        </div>
-                    </div>
-                    <select class="custom-select d-block w-100" id="selectorTarjeta">
-                        <option disabled selected value="">Seleccionar tarjeta</option>
-                    </select>
-                    <button type="button" class="m-1 btn btn-outline-danger" data-toggle="modal" data-target="#modalTarjeta">Agregar tarjeta</button>
-                    <input id="cuentaTransferencia" type="text" class="form-control" placeholder="Nº de cuenta" value="">
-                </div>
-            </div>
-        </div>
-    </div>
-    `;
-  document.getElementById(
-    "cart-datapago-container"
-  ).innerHTML = htmlContentToAppend;
-}
-
-function actualizarSubtotales() {
-  // variables globales
-  let productos = document.getElementsByClassName("producto");
-  let subtotal = 0;
-  let unidades = 0;
-  let producto;
-
-  // variables por producto
-  let cantidad, precio, precioxcantUYU, moneda, precioxcant, subtotalProdELEM;
-
-  for (let i = 0; i < productos.length; i++) {
-    producto = productos[i];
-    cantidad = producto.getElementsByClassName("cantidad")[0].value;
-    moneda = producto.getElementsByClassName("moneda")[0].textContent;
-    precio = producto.getElementsByClassName("precio")[0].textContent;
-
-    precioxcant = precio * cantidad;
-
-    if (moneda == "USD") {
-      precioxcantUYU = precioxcant * 40;
-      producto.getElementsByClassName("uyus")[0].innerHTML =
-        `(UYU ` + precioxcantUYU + `)`;
-    } else {
-      precioxcantUYU = precioxcant;
-    }
-
-    subtotalProdELEM = producto.getElementsByClassName("subtotalProd")[0];
-    subtotalProdELEM.innerHTML = precioxcant;
-
-    // actualizacion variables resumen compra
-    unidades += Number.parseInt(cantidad);
-    subtotal += Number.parseInt(precioxcantUYU);
-  }
-
-  // insercion variables resumen compra actualizadas
-  let subtotalELEM = document.getElementById("subtotal");
-  let cantotalELEM = document.getElementById("totalUnidades");
-
-  subtotalELEM.innerHTML = subtotal;
-  cantotalELEM.innerHTML = unidades;
-
-  let costoEnvio = Number.parseInt(
-    document.getElementById("metodoEnvio").value
+function actualizarSubtotal(id) {
+  let count = parseInt(
+    document.getElementById("inputCantArticulos" + id).value
   );
-  let costoEnvioELEM = document.getElementById("costoEnvio");
-  let totalELEM = document.getElementById("total");
-  if (costoEnvio != 0) {
-    costoEnvioELEM.innerHTML = (subtotal * costoEnvio) / 100;
-    totalELEM.innerHTML =
-      Math.round(subtotal * (1 + costoEnvio / 100) * 100) / 100;
-  } else {
-    costoEnvioELEM.innerHTML = "--";
-    totalELEM.innerHTML = "--";
-  }
-}
+  monedaProd = document.getElementById("monedaCosto" + id).textContent;
+  monedaProd2 = monedaProd.split(" ");
 
-function agregarEventosCantidades() {
-  let todasLasCantidades = document.getElementsByClassName("cantidad");
-  for (let i = 0; i < todasLasCantidades.length; i++) {
-    todasLasCantidades[i].addEventListener("input", function (e) {
-      actualizarSubtotales();
-    });
-  }
-  let cambiaEnvio = document.getElementById("metodoEnvio");
-  cambiaEnvio.addEventListener("input", function (e) {
-    actualizarSubtotales();
-  });
-}
-
-function enableCardOrNot() {
-  let transferenciaELEM = document.getElementById("cuentaTransferencia");
-  let sel = document.getElementById("selectorTarjeta");
-  let tarjetaELEM = document.getElementById("tarjeta");
-  let esTarjeta = tarjetaELEM.checked;
-  if (esTarjeta) {
-    transferenciaELEM.disabled = true;
-    sel.disabled = false;
-  } else {
-    transferenciaELEM.disabled = false;
-    sel.disabled = true;
-  }
-}
-
-function agregarTarjeta() {
-  // se chequea el vencimiento
-
-  let month = Number.parseInt(document.getElementById("mesExp").value);
-  let year = Number.parseInt(document.getElementById("anioExp").value);
-  let today = new Date();
-  let vencimiento = new Date(year, month - 1, today.getDate());
-
-  if (vencimiento < today) {
-    if (
-      !(
-        vencimiento.getFullYear() == today.getFullYear() &&
-        vencimiento.getMonth() == today.getMonth()
-      )
-    ) {
-      alert("Ingrese una tarjeta vigente");
-      return false;
-    }
+  var moneda = 1;
+  if (monedaProd2[0] == "USD") {
+    moneda = 40;
   }
 
-  // se agrega
-  let nuevaTarjeta = document.getElementById("cardnumber").value;
-  let sel = document.getElementById("selectorTarjeta");
-  var opt = document.createElement("option");
-  opt.appendChild(document.createTextNode(nuevaTarjeta));
-  opt.value = nuevaTarjeta;
-  sel.appendChild(opt);
-  alert("Tarjeta " + nuevaTarjeta + " agregada");
+  subtotal = monedaProd2[1] * count * moneda;
 
-  // limpiar formulario
-  let form = document.getElementById("formNuevaTarjeta");
-  form.reset();
+  document.getElementById("subtotalProd" + id).innerHTML = "UYU " + subtotal;
+
+  actualizaTotal();
 }
 
-function chequearDatosEnvio() {
-  // chequeo de calle, nropuerta, esquina
-  let calle = document.getElementById("calle").value;
-  let nropuerta = document.getElementById("numeropuerta").value;
-  let esquina = document.getElementById("esquina").value;
-  let pais = document.getElementById("pais").value;
-  let envio = document.getElementById("metodoEnvio").value;
+function actualizaTotal() {
+  let subTotCostoHTML = document.getElementById("subTotalHTML");
+  let costoShippingHTML = document.getElementById("costoEnvioHTML");
+  let costoTotHTML = document.getElementById("costoTotal");
 
-  if (calle == "") {
-    alert("Agregue una calle para el envío.");
-    return false;
-  } else if (nropuerta == "") {
-    alert("Agregue un número de puerta para el envío.");
-    return false;
-  } else if (esquina == "") {
-    alert("Agregue una esquina para el envío.");
-    return false;
-  } else if (pais == "") {
-    alert("Agregue un país para el envío.");
-    return false;
-  } else if (envio == 0) {
-    alert("Seleccione método de envío.");
-    return false;
+  var sumaSubTotales = 0;
+
+  for (var i = 0; i < datosCart.length; i++) {
+    var texto = document.getElementById("subtotalProd" + i).textContent;
+    var arText = texto.split(" ");
+    var valorTexto = arText[1];
+    sumaSubTotales += parseInt(valorTexto);
   }
 
-  return true;
+  let costoShipping = Math.round(porcentajeShipping * sumaSubTotales);
+
+  subTotCostoHTML.innerHTML = "UYU " + sumaSubTotales;
+  costoShippingHTML.innerHTML = "UYU " + costoShipping;
+  costoTotHTML.innerHTML = "UYU " + (sumaSubTotales + costoShipping);
 }
 
-function comprarValidacion() {
-  let esTarjeta = document.getElementById("tarjeta").checked;
-  let tarjeta = document.getElementById("selectorTarjeta").value;
-  let nroCuenta = document.getElementById("cuentaTransferencia").value;
-
-  if (!chequearDatosEnvio()) {
-    return false;
-  }
-
-  if (esTarjeta) {
-    if (tarjeta == "") {
-      alert("Seleccione una tarjeta, añadiéndola de ser necesario.");
-      return false;
-    }
-  } else if (nroCuenta == "") {
-    alert("Ingrese un número de cuenta.");
-    return false;
-  } else {
-    if (!confirm("¿Desea confirmar la compra?")) {
-      return false;
-    }
-  }
-  alert("Compra realizada, ¡muchas gracias!");
-  return true;
-}
-
-function quitarprod() {
-  let prod = document.getElementById("producto0");
-  let prod1 = document.getElementById("producto1");
-
-  prod1.remove();
-  prod.remove();
-}
-
-//Función que se ejecuta una vez que se haya lanzado el evento de
-//que el documento se encuentra cargado, es decir, se encuentran todos los
-//elementos HTML presentes.
 document.addEventListener("DOMContentLoaded", function (e) {
   getJSONData(CART_INFO_URL).then(function (resultObj) {
     if (resultObj.status === "ok") {
-      currentCart = resultObj.data;
-      currentCartElements = currentCart["articles"];
-      showCartElementsList();
-      showCartResume();
-      showDataEnvio();
-      showDataPago();
-      actualizarSubtotales();
+      datosCarrito = resultObj.data;
+      datosCart = datosCarrito.articles;
+      mostrarArticulos(datosCart);
+
+      primerSubtotal = 0;
+      primerTotal = 0;
+      primerSubtotal2 = 0;
+
+      for (let i = 0; i < datosCart.length; i++) {
+        primerSubtotal = document
+          .getElementById("subtotalProd" + i)
+          .textContent.split(" ");
+        primerSubtotal2 += parseInt(primerSubtotal[1]);
+      }
+      primerTotal = primerSubtotal2 * porcentajeShipping;
+
+      document.getElementById("subTotalHTML").innerHTML = primerSubtotal2;
+      document.getElementById("costoEnvioHTML").innerHTML =
+        primerSubtotal2 * porcentajeShipping;
+      document.getElementById("costoTotal").innerHTML =
+        primerSubtotal2 * porcentajeShipping + primerSubtotal2;
     }
-    agregarEventosCantidades();
-    enableCardOrNot();
-
-    document.getElementById("tarjeta").addEventListener("click", function () {
-      enableCardOrNot();
-    });
-
-    document
-      .getElementById("transferencia")
-      .addEventListener("click", function () {
-        enableCardOrNot();
-      });
-
-    // Borra producto
-    // ---------------------------
-
-    // document
-    // .getElementById("btnquitar0")
-    // .addEventListener("click", function (event) {
-    // console.log(event.target.id);
-
-    // quitarprod();
-    // });
-
-    document
-      .getElementById("btnquitar")
-      .addEventListener("click", function (event) {
-        console.log(event.target.parentNode.parentNode.parentNode);
-
-        // quitarprod();
-      });
   });
+
+  document
+    .getElementById("premiumradio")
+    .addEventListener("change", function () {
+      porcentajeShipping = 0.15;
+      actualizaTotal();
+    });
+  document
+    .getElementById("expressradio")
+    .addEventListener("change", function () {
+      porcentajeShipping = 0.07;
+      actualizaTotal();
+    });
+  document
+    .getElementById("standardradio")
+    .addEventListener("change", function () {
+      porcentajeShipping = 0.05;
+      actualizaTotal();
+    });
 });
+
+function comprobarPago() {
+  if (document.getElementById("metodoTarjeta").checked == true) {
+    document.getElementById("posibleAlerta").style.display = "contents";
+    sessionStorage.setItem("valorComprobacion", 1);
+  } else if (document.getElementById("metodoTransferencia").checked == true) {
+    document.getElementById("posibleAlerta").style.display = "contents";
+    sessionStorage.setItem("valorComprobacion", 1);
+  } else if (
+    document.getElementById("metodoTarjeta").checked == false &&
+    document.getElementById("transferenciaBancaria").checked == false
+  ) {
+    document.getElementById("posibleAlerta2").innerHTML += `
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      Inserte un método de pago
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    `;
+  }
+}
+function cerrarCompra() {
+  console.log("entra");
+  sessionStorage.setItem("valorComprobacion", 0);
+}
+
+function comprobacion() {
+  var comprueba = sessionStorage.getItem("valorComprobacion");
+  if (comprueba == 1) {
+    document.getElementById("posibleAlerta").style.display = "contents";
+  } else {
+    document.getElementById("posibleAlerta").style.display = "none";
+  }
+}
+comprobacion();
