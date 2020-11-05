@@ -95,9 +95,9 @@
                <th scope="col">Costo</th>
                <th scope="col">Cantidad</th>
                <th scope="col">Subtotal</th>
+               <th scope="col"></th>
              </tr>
            </thead>
-  
             <tbody id="articulosCarrito">
   
              </tbody>
@@ -107,7 +107,7 @@
     <div class="container p-5">
       <hr class="mb-4">
       <h5 class="mb-3">Tipo de envío</h5>
-        <form method="post"  class="needs-validation" id="cart-info">
+        <form   class="needs-validation" id="cart-info">
   
           <div class="d-block my-3">
   
@@ -181,20 +181,7 @@
             <button type="button" class="m-1 btn btn-link" data-toggle="modal" data-target="#formaPago">Seleccionar forma de pago</button>
           </div>
   
-          <div class="row" id="alertaCompra">
-            <div id="posibleAlerta" class="container alert-wrapper" script="comprobacion()">
-              <div class="alert alert-success alert-dismissible" role="alert">
-                ¡Compra realizada con éxito!
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close" onClick="cerrarCompra()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-          </div>
-  
-          <div id="posibleAlerta2" class="container" script="comprobacion()">
-  
-          </div>
+         
   
           <div class="modal fade" tabindex="-1" role="dialog" id="formaPago">
             <div class="modal-dialog" role="document">
@@ -208,8 +195,8 @@
                 <div class="modal-body">
                   <div class="container">
                       <div class="row">
-                        <input form="cart-info" id="metodoTarjeta" name="tipoDePago" type="radio" class="form-check-input" style="margin-left:10px;" required>
-                        <label class="form-check-label" for="metodoTarjeta" style="margin-left:7%; margin-right:15%;">Tarjeta</label>
+                        <input form="cart-info" id="metodoTarjeta" name="tipoDePago" type="radio" class="form-check-input" style="margin-left:10px;">
+                        <label class="form-check-label" for="metodoTarjeta" id="tarjeta" style="margin-left:7%; margin-right:15%;">Tarjeta</label>
                       </div>
                       <hr>
                       <div class="form-row">
@@ -232,8 +219,8 @@
                       <hr>
   
                       <div class="row">
-                        <input form="cart-info" id="metodoTransferencia" name="tipoDePago" type="radio" class="form-check-input" style="margin-left:10px;" required>
-                        <label class="form-check-label" for="metodoTransferencia" style="margin-left:7%; margin-right:15%;">Transferencia bancaria</label>
+                        <input form="cart-info" id="metodoTransferencia" name="tipoDePago" type="radio" class="form-check-input" style="margin-left:10px;">
+                        <label class="form-check-label" for="metodoTransferencia" id="transferencia" style="margin-left:7%; margin-right:15%;">Transferencia bancaria</label>
                       </div>
   
                       <hr>
@@ -241,7 +228,7 @@
                       <div class="form-row">
                         <div class="col-md-4">
                           <label for="transferenciaBancaria" style="margin-left:5%; margin-right:15%;">Número de cuenta</label>
-                          <input form="cart-info" id="transferenciaBancaria" name="pagoTransferencia" type="text" class="form-control">
+                          <input form="cart-info" id="transferenciaBancaria" name="tipoDePago" type="text" class="form-control">
                         </div>
                       </div>
   
@@ -256,7 +243,7 @@
   
   
           <hr class="mb-4">
-          <button form="cart-info" class="btn btn-primary btn-lg" onclick="comprobarPago()">Comprar</button>
+          <button onclick="comprar()" form="cart-info" class="btn btn-primary btn-lg" id="btnpago">Comprar</button>
   
   
       </form>
@@ -293,5 +280,7 @@
       src="https://kit.fontawesome.com/62d1a3e9cc.js"
       crossorigin="anonymous"
     ></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
   </body>
 </html>

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
   if (informacion != null) {
     completonombre.innerHTML =
       informacion[0].nombres + " " + informacion[0].apellidos;
-    emailtext.innerHTML = informacion[0].email;
+    emailtext.innerHTML = informacion[0].mail;
     numerotext.innerHTML = informacion[0].telefono;
     direcciontext.innerHTML = informacion[0].direccion;
   } else {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function (e) {
 const btn = document.getElementById("btnguardar");
 const nombres = document.getElementById("nombres");
 const apellidos = document.getElementById("apellidos");
-const email = document.getElementById("mail");
+const mail = document.getElementById("mail");
 const telefono = document.getElementById("telefono");
 const direccion = document.getElementById("direccion");
 
@@ -36,7 +36,7 @@ btn.addEventListener("click", (e) => {
   let datos = Array({
     nombres: nombres.value,
     apellidos: apellidos.value,
-    email: email.value,
+    mail: mail.value,
     telefono: telefono.value,
     direccion: direccion.value,
   });

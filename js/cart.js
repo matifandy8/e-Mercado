@@ -2,52 +2,65 @@ var porcentajeShipping = 0.15;
 var datosCart = [];
 
 function mostrarArticulos(arts) {
-  let htmlContenido = "";
+  var htmlContenido = "";
 
-  for (var i = 0; i < arts.length; i++) {
-    let costoUnitario = arts[i].unitCost;
-    let monedaProducto = arts[i].currency;
-    var tipoCambio = 1;
-    if (monedaProducto == "USD") {
-      tipoCambio = 40;
+  if (arts.length == 0) {
+    console.log(arts.length);
+    htmlContenido += `<th scope="row">
+     <td> <h3>El Carrito está vacío...</h3> <span><a href="products.html"> Agregar Productos</a></span> </td>
+    </th>`;
+  } else {
+    for (var i = 0; i < arts.length; i++) {
+      let costoUnitario = arts[i].unitCost;
+      let monedaProducto = arts[i].currency;
+      let tipoCambio = 1;
+      if (monedaProducto == "USD") {
+        tipoCambio = 40;
+      }
+
+      var valorSubtotal = tipoCambio * costoUnitario * arts[i].count;
+      costoTipoMoneda = monedaProducto + " " + costoUnitario;
+      htmlContenido +=
+        `
+      <tr id="fila` +
+        i +
+        ` id="articulo` +
+        i +
+        `">
+        <td><img src="` +
+        arts[i].src +
+        `" class="img-thumbnail" width="80%"></td>
+        <td>` +
+        arts[i].name +
+        `</td>
+        <td id="monedaCosto` +
+        i +
+        `">` +
+        costoTipoMoneda +
+        `</td>
+        <td><input onchange="actualizarSubtotal(` +
+        i +
+        `)" id="inputCantArticulos` +
+        i +
+        `" class="inputClase quantity" min="1" name="quantity"
+        value="` +
+        arts[i].count +
+        `" type="number"></td>
+        <td><span id="subtotalProd` +
+        i +
+        `" class="subtotalProdClase">` +
+        "UYU " +
+        valorSubtotal +
+        `</span></td>
+        <td><span><button type="button" class="btn btn-outline-secondary" onclick="borrarProd(this)" > <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                         <path fill-rule="evenodd" d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/> </svg></button></span></td>
+        
+                     
+      </tr>
+      `;
     }
-
-    var valorSubtotal = tipoCambio * costoUnitario * arts[i].count;
-    costoTipoMoneda = monedaProducto + " " + costoUnitario;
-    htmlContenido +=
-      `
-    <tr id="fila` +
-      i +
-      `">
-      <td><img src="` +
-      arts[i].src +
-      `" class="img-thumbnail" width="80%"></td>
-      <td>` +
-      arts[i].name +
-      `</td>
-      <td id="monedaCosto` +
-      i +
-      `">` +
-      costoTipoMoneda +
-      `</td>
-      <td><input onchange="actualizarSubtotal(` +
-      i +
-      `)" id="inputCantArticulos` +
-      i +
-      `" class="inputClase quantity" min="1" name="quantity"
-      value="` +
-      arts[i].count +
-      `" type="number"></td>
-      <td><span id="subtotalProd` +
-      i +
-      `" class="subtotalProdClase">` +
-      "UYU " +
-      valorSubtotal +
-      `</span></td>
-    </tr>
-    `;
+    document.getElementById("articulosCarrito").innerHTML = htmlContenido;
   }
-  document.getElementById("articulosCarrito").innerHTML = htmlContenido;
 }
 
 function actualizarSubtotal(id) {
@@ -137,38 +150,42 @@ document.addEventListener("DOMContentLoaded", function (e) {
     });
 });
 
-function comprobarPago() {
-  if (document.getElementById("metodoTarjeta").checked == true) {
-    document.getElementById("posibleAlerta").style.display = "contents";
-    sessionStorage.setItem("valorComprobacion", 1);
-  } else if (document.getElementById("metodoTransferencia").checked == true) {
-    document.getElementById("posibleAlerta").style.display = "contents";
-    sessionStorage.setItem("valorComprobacion", 1);
-  } else if (
-    document.getElementById("metodoTarjeta").checked == false &&
-    document.getElementById("transferenciaBancaria").checked == false
-  ) {
-    document.getElementById("posibleAlerta2").innerHTML += `
-    <div class="alert alert-danger alert-dismissible" role="alert">
-      Inserte un método de pago
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    `;
+function comprar() {
+  var calleEnvio = document.getElementById("calleEnvio").value;
+  var numeroEnvio = document.getElementById("numeroEnvio").value;
+  var esquinaEnvio = document.getElementById("esquinaEnvio").value;
+
+  if (calleEnvio === "") {
+    swal("Escriba su calle", "Error", "error");
+    return false;
   }
-}
-function cerrarCompra() {
-  console.log("entra");
-  sessionStorage.setItem("valorComprobacion", 0);
+  if (numeroEnvio === "") {
+    swal("Escriba su numero", "Error", "error");
+    return false;
+  }
+  if (esquinaEnvio === "") {
+    swal("Escriba su esquina", "Error", "error");
+    return false;
+  }
+  if (!document.querySelector('input[name="tipoDePago"]:checked')) {
+    swal("Selecciona la forma de pago", "Error", "error");
+    hasError = true;
+  } else {
+    swal(
+      "Compra Realizada con exito",
+      "Disfruta tus nuevos productos!",
+      "success"
+    );
+  }
 }
 
-function comprobacion() {
-  var comprueba = sessionStorage.getItem("valorComprobacion");
-  if (comprueba == 1) {
-    document.getElementById("posibleAlerta").style.display = "contents";
-  } else {
-    document.getElementById("posibleAlerta").style.display = "none";
-  }
+const btn = document.getElementById("btnpago");
+
+btn.addEventListener("click", (e) => {
+  e.preventDefault();
+});
+
+//Eliminar un producto
+function borrarProd(id) {
+  id.parentNode.parentNode.parentNode.remove();
 }
-comprobacion();
